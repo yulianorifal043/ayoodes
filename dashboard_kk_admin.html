@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Data Kartu Keluarga</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    
+    <!-- Custom Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB', // Biru Resmi
+                        secondary: '#F0F9FF', // Biru Muda untuk background
+                    },
+                },
+            },
+        }
+    </script>
+    
+    <!-- Load Custom Styles (untuk layout sidebar) -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="antialiased bg-gray-100 min-h-screen">
+
+    <!-- Notification Container (Untuk pesan sistem) -->
+    <div id="notification-container" class="fixed right-4 top-4 z-50 space-y-2">
+        <!-- Notifikasi akan muncul di sini -->
+    </div>
+
+    <!-- Sidebar (Menggunakan struktur dari dashboard_utama.html) -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition duration-300 ease-in-out bg-gray-800 w-64 z-50 shadow-2xl">
+        <div class="p-6">
+            <a href="dashboard.html" class="flex items-center space-x-3 text-white">
+                <img src="assets/images/logo-desa.png" alt="Logo Desa" class="w-8 h-8">
+                <span class="text-xl font-extrabold">Admin Desa</span>
+            </a>
+        </div>
+        <nav class="mt-8 space-y-2 px-4">
+            <a href="dashboard.html" class="flex items-center space-x-3 p-3 rounded-xl text-gray-400 hover:bg-gray-700 hover:text-white transition duration-150">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                <span>Dashboard Utama</span>
+            </a>
+            <a href="dashboard_kk_admin.html" class="flex items-center space-x-3 p-3 rounded-xl bg-gray-700 text-white transition duration-150 font-semibold">
+                <i data-lucide="users-round" class="w-5 h-5"></i>
+                <span>Data Kartu Keluarga</span>
+            </a>
+            <a href="layanan_warga.html" class="flex items-center space-x-3 p-3 rounded-xl text-gray-400 hover:bg-gray-700 hover:text-white transition duration-150">
+                <i data-lucide="scroll-text" class="w-5 h-5"></i>
+                <span>Manajemen Layanan</span>
+            </a>
+            <a href="informasi_desa.html" class="flex items-center space-x-3 p-3 rounded-xl text-gray-400 hover:bg-gray-700 hover:text-white transition duration-150">
+                <i data-lucide="map" class="w-5 h-5"></i>
+                <span>Informasi Desa</span>
+            </a>
+        </nav>
+        <div class="absolute bottom-0 w-full p-4 border-t border-gray-700">
+            <a href="index.html" class="flex items-center space-x-3 p-3 rounded-xl text-red-400 hover:bg-gray-700 transition duration-150">
+                <i data-lucide="log-out" class="w-5 h-5"></i>
+                <span>Kembali ke Publik</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div id="main-content" class="md:ml-64 transition-all duration-300 min-h-screen">
+        
+        <!-- Top Bar Header -->
+        <header class="bg-white shadow-sm p-4 sticky top-0 z-30">
+            <div class="flex justify-between items-center">
+                <button id="sidebar-toggle" class="md:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+                <h1 class="text-xl sm:text-2xl font-bold text-gray-800">Manajemen Data KK</h1>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-600 hidden sm:block">Admin: [Nama Admin]</span>
+                    <i data-lucide="user-circle" class="w-7 h-7 text-gray-500"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Body -->
+        <main class="p-4 sm:p-6"> <!-- Disesuaikan: padding horizontal di mobile dikurangi dari p-6 menjadi p-4 -->
+            
+            <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg"> <!-- Disesuaikan: padding di dalam card dikurangi di mobile -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b pb-4 space-y-3 sm:space-y-0">
+                    <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Daftar Kepala Keluarga</h2>
+                    <button onclick="showNotification('Fitur Tambah Kepala Keluarga belum diimplementasikan.', 'info')" class="w-full sm:w-auto bg-primary text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-blue-700 transition duration-150">
+                        <i data-lucide="user-plus" class="w-4 h-4 mr-2 inline-block"></i> Tambah KK
+                    </button>
+                </div>
+
+                <!-- Notifikasi Keamanan NIK -->
+                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-lg" role="alert">
+                    <p class="font-bold">Peringatan Keamanan Data</p>
+                    <p class="text-sm">NIK di tabel utama **disensor (5 digit terakhir)**. Lihat NIK lengkap hanya melalui tombol "Lihat detail" untuk menghindari penyalahgunaan data.</p>
+                </div>
+
+                <!-- Table Data KK -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No.</th>
+                                <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto</th>
+                                <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Lengkap</th>
+                                <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIK (Disensor)</th>
+                                <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis Kelamin</th>
+                                <th class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">RT/RW</th>
+                                <th class="px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="kk-data-table" class="bg-white divide-y divide-gray-200">
+                            <!-- Data KK akan dimuat di sini oleh JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Detail Kependudukan -->
+    <div id="detail-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto transform transition-all p-6 relative">
+            <h3 class="text-2xl font-bold border-b pb-3 mb-4 text-gray-800">Detail Data Kependudukan</h3>
+            <button onclick="closeModal('detail-modal')" class="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100">
+                <i data-lucide="x" class="w-6 h-6 text-gray-600"></i>
+            </button>
+            
+            <div id="modal-content-detail" class="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
+                <!-- Data lengkap akan dimuat di sini -->
+            </div>
+            
+            <div class="mt-6 pt-4 border-t text-right">
+                 <button onclick="closeModal('detail-modal')" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-xl font-semibold hover:bg-gray-300 transition duration-150">Tutup</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Photo Preview -->
+    <div id="photo-modal" class="fixed inset-0 bg-gray-900 bg-opacity-90 hidden items-center justify-center z-[60]">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg transform transition-all p-6 relative">
+            <h3 id="photo-modal-title" class="text-xl font-bold border-b pb-3 mb-4 text-gray-800">Preview Foto</h3>
+            <button onclick="closeModal('photo-modal')" class="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100">
+                <i data-lucide="x" class="w-6 h-6 text-gray-600"></i>
+            </button>
+            
+            <div class="flex justify-center">
+                <img id="modal-photo" src="" alt="Foto Preview" class="max-w-full max-h-[70vh] rounded-lg border border-gray-200 object-contain">
+            </div>
+            
+            <div class="mt-6 pt-4 border-t text-right">
+                 <button onclick="closeModal('photo-modal')" class="bg-primary text-white px-4 py-2 rounded-xl font-semibold hover:bg-blue-700 transition duration-150">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Script untuk Halaman Admin KK -->
+    <script>
+        // Data Mock untuk Simulasi KK
+        const mockKeluargaData = [
+            { id: 1, nama: "Budi Santoso", nik: "3301011205800001", jk: "Laki-laki", rt: "001", rw: "003", pekerjaan: "Wiraswasta", agama: "Islam", pendidikan: "S1", goldar: "A", status_kawin: "Kawin", tgl_kawin: "12-12-2005", tgl_cerai: null, status_hub: "Kepala Keluarga", kwarganegaraan: "WNI", no_paspor: "A1234567", no_kitap: null, ayah: "Sutrisno", ibu: "Siti Aisyah" },
+            { id: 2, nama: "Joko Prabowo", nik: "3301011003750005", jk: "Laki-laki", rt: "002", rw: "001", pekerjaan: "PNS", agama: "Katolik", pendidikan: "S2", goldar: "B", status_kawin: "Kawin", tgl_kawin: "05-07-2000", tgl_cerai: null, status_hub: "Kepala Keluarga", kwarganegaraan: "WNI", no_paspor: null, no_kitap: null, ayah: "Pranoto", ibu: "Maria" },
+            { id: 3, nama: "Dewi Lestari", nik: "3301012511900010", jk: "Perempuan", rt: "001", rw: "002", pekerjaan: "Ibu Rumah Tangga", agama: "Islam", pendidikan: "SMA", goldar: "O", status_kawin: "Cerai Mati", tgl_kawin: "01-01-2015", tgl_cerai: "10-02-2023", status_hub: "Kepala Keluarga", kwarganegaraan: "WNI", no_paspor: null, no_kitap: null, ayah: "Ahmad", ibu: "Fatimah" },
+        ];
+
+        // Fungsi Helper untuk sensor NIK (menampilkan 5 digit terakhir)
+        function sensorNIK(nik) {
+            if (!nik || nik.length < 5) return '*****';
+            const visibleDigits = nik.slice(-5);
+            const hiddenPart = '*'.repeat(nik.length - 5);
+            return hiddenPart + visibleDigits;
+        }
+
+        // Fungsi Helper untuk mendapatkan foto placeholder (inisial)
+        function getFotoUrl(nama) {
+            const initial = nama.split(' ').map(n => n[0]).join('').toUpperCase();
+            // Menggunakan placeholder.co untuk inisial nama
+            return `https://placehold.co/36x36/2563EB/ffffff?text=${initial}&font=inter`;
+        }
+        
+        // Fungsi BARU untuk menampilkan preview foto
+        function showPhotoPreview(url, name) {
+            document.getElementById('modal-photo').src = url.replace('36x36', '300x300'); // Perbesar ukuran placeholder
+            document.getElementById('photo-modal-title').textContent = `Foto Profil: ${name}`;
+            document.getElementById('photo-modal').classList.remove('hidden');
+            document.getElementById('photo-modal').classList.add('flex');
+        }
+
+        // Fungsi untuk menampilkan modal detail
+        function showDetail(nikLengkap) {
+            console.warn("ADMIN SECURITY WARNING: Akses NIK Lengkap diaktifkan. Gunakan data ini dengan bertanggung jawab dan jangan disalahgunakan!");
+            // Pastikan showNotification tersedia, ini berasal dari admin_core.js
+            if (typeof showNotification === 'function') {
+                showNotification('NIK lengkap ditampilkan. Harap menjaga kerahasiaan data.', 'warning');
+            }
+
+            const data = mockKeluargaData.find(d => d.nik === nikLengkap);
+            
+            // Handle jika data tidak ditemukan (safety check)
+            if (!data) {
+                if (typeof showNotification === 'function') {
+                    showNotification('Data detail tidak ditemukan.', 'error');
+                }
+                return;
+            }
+
+            const modalContent = document.getElementById('modal-content-detail');
+            modalContent.innerHTML = ''; // Kosongkan konten lama
+
+            const fields = {
+                'Nama Lengkap': data.nama, 'NIK Lengkap': `<span class="font-extrabold text-red-600">${data.nik}</span>`,
+                'Jenis Kelamin': data.jk, 'Tanggal Lahir': 'XX-XX-XXXX', // Data Mock
+                'Agama': data.agama, 'Pendidikan': data.pendidikan,
+                'Jenis Pekerjaan': data.pekerjaan, 'Golongan Darah': data.goldar,
+                'Status Perkawinan': data.status_kawin, 'Tanggal Perkawinan': data.tgl_kawin || '-',
+                'Tanggal Perceraian': data.tgl_cerai || '-', 'Status Hub. Keluarga': data.status_hub,
+                'Kewarganegaraan': data.kwarganegaraan, 'No. Paspor': data.no_paspor || '-',
+                'No. KITAP': data.no_kitap || '-', 'Nama Ayah': data.ayah,
+                'Nama Ibu': data.ibu
+            };
+
+            for (const [label, value] of Object.entries(fields)) {
+                modalContent.innerHTML += `
+                    <div class="col-span-2 sm:col-span-1">
+                        <p class="text-gray-500 font-medium">${label}</p>
+                        <p class="text-gray-900 font-semibold">${value}</p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('detail-modal').classList.remove('hidden');
+            document.getElementById('detail-modal').classList.add('flex');
+        }
+
+        // Fungsi untuk menutup modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            document.getElementById(modalId).classList.remove('flex');
+        }
+        
+        // FUNGSI BARU: Implementasi toggleSidebar yang telah disempurnakan
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlayId = 'sidebar-overlay';
+            let overlay = document.getElementById(overlayId);
+
+            // Toggle the sidebar's position classes
+            sidebar.classList.toggle('-translate-x-full'); 
+            sidebar.classList.toggle('translate-x-0');   
+            
+            // Manage the overlay visibility (Overlay creates the pop-up effect)
+            if (sidebar.classList.contains('translate-x-0')) {
+                // SHOW: Sidebar is now visible
+                if (!overlay) {
+                    overlay = document.createElement('div');
+                    overlay.id = overlayId;
+                    // z-40 is below sidebar (z-50)
+                    overlay.className = 'fixed inset-0 bg-gray-900 bg-opacity-50 z-40 md:hidden'; 
+                    overlay.onclick = toggleSidebar; // Click overlay to close
+                    document.body.appendChild(overlay);
+                }
+            } else {
+                // HIDE: Sidebar is now hidden
+                if (overlay) {
+                    overlay.remove();
+                }
+            }
+        }
+        
+        // Tambahkan fungsi ini ke window agar dapat diakses oleh elemen HTML (Opsional, tapi aman)
+        window.toggleSidebar = toggleSidebar;
+
+
+        // Fungsi untuk melihat anggota keluarga (mengarahkan ke halaman lain)
+        function viewAnggotaKeluarga(nikKepala) {
+            // Pastikan showNotification tersedia, ini berasal dari admin_core.js
+            if (typeof showNotification === 'function') {
+                 showNotification(`Mengarahkan ke halaman manajemen anggota untuk NIK ${nikKepala}.`, 'info');
+            }
+            // Menggunakan NIK sebagai query param untuk identifikasi KK di halaman tujuan
+            window.location.href = `manajemen_anggota.html?nik=${nikKepala}`;
+        }
+
+        // Fungsi utama untuk memuat data ke tabel
+        function loadKeluargaData() {
+            const tableBody = document.getElementById('kk-data-table');
+            tableBody.innerHTML = '';
+
+            mockKeluargaData.forEach((data, index) => {
+                const fotoUrl = getFotoUrl(data.nama);
+                const row = `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${index + 1}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <img src="${fotoUrl}" alt="Foto ${data.nama}" class="w-9 h-9 rounded-full inline-block cursor-pointer hover:ring-2 ring-primary transition duration-150" onclick="showPhotoPreview('${fotoUrl}', '${data.nama}')">
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">${data.nama}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">${sensorNIK(data.nik)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${data.jk}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${data.rt}/${data.rw}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium space-x-2">
+                            <button onclick="showDetail('${data.nik}')" class="text-primary hover:text-blue-700 p-2 rounded-lg transition duration-150 bg-blue-50">
+                                <i data-lucide="eye" class="w-4 h-4 inline-block"></i> Lihat detail
+                            </button>
+                            <button onclick="viewAnggotaKeluarga('${data.nik}')" class="text-green-600 hover:text-green-800 p-2 rounded-lg transition duration-150 bg-green-50">
+                                <i data-lucide="users" class="w-4 h-4 inline-block"></i> Lihat Anggota
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+
+            // Re-inisialisasi Lucide icons setelah konten dimuat
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+
+        // Inisialisasi pada saat dokumen dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            loadKeluargaData();
+            
+            // Menggunakan fungsi toggleSidebar yang baru dibuat
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', toggleSidebar);
+            }
+            
+            // Tambahkan event listener ke tautan sidebar untuk menutup menu setelah diklik (UX improvement)
+            const sidebarLinks = document.querySelectorAll('#sidebar a');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    // Hanya tutup jika berada di mode mobile (lebar < md:768px)
+                    if (window.innerWidth < 768) { 
+                        toggleSidebar();
+                    }
+                });
+            });
+
+            // Memicu notifikasi sambutan
+            // Check if showNotification function exists before calling
+            if (typeof showNotification === 'function') {
+                showNotification('Selamat datang di Dashboard Data KK Admin.', 'info');
+            }
+        });
+
+        // Event listener untuk menutup modal detail ketika mengklik di luar area modal
+        document.getElementById('detail-modal')?.addEventListener('click', function(e) {
+            if (e.target.id === 'detail-modal') {
+                closeModal('detail-modal');
+            }
+        });
+        
+        // Event listener untuk menutup modal foto ketika mengklik di luar area modal
+        document.getElementById('photo-modal')?.addEventListener('click', function(e) {
+            if (e.target.id === 'photo-modal') {
+                closeModal('photo-modal');
+            }
+        });
+
+    </script>
+
+    <!-- Load Admin Core Script (untuk showNotification) -->
+    <script src="assets/js/admin_core.js"></script>
+</body>
+</html>

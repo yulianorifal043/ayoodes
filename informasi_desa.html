@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informasi Profil Desa - [Nama Desa Anda]</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <!-- Load Custom Styles -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="antialiased bg-gray-50 min-h-screen">
+
+    <!-- Notification Container (Digunakan oleh admin_core.js) -->
+    <div id="notification-container" class="fixed right-4 top-4 z-50 space-y-2">
+        <!-- Notifikasi akan muncul di sini -->
+    </div>
+
+    <!-- Modal Detail Personil -->
+    <div id="personil-modal" class="fixed inset-0 bg-gray-900 bg-opacity-70 z-50 flex items-center justify-center hidden transition-opacity duration-300 opacity-0" onclick="closeModal()">
+        <div class="bg-white p-6 rounded-xl shadow-2xl w-full max-w-lg m-4" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center border-b pb-3 mb-4">
+                <h3 class="text-2xl font-bold text-gray-900" id="modal-title">Detail Personil</h3>
+                <button class="text-gray-500 hover:text-gray-800" onclick="closeModal()">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <div id="modal-content" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Konten akan dimuat di sini oleh JavaScript -->
+            </div>
+            
+            <div class="mt-6 pt-4 border-t text-sm text-gray-600">
+                <p class="font-semibold">Catatan:</p>
+                <p>Informasi kontak lengkap tidak ditampilkan untuk menjaga privasi publik.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar Header (Fixed) -->
+    <header class="bg-white fixed top-0 w-full z-40 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center space-x-2 text-xl font-extrabold text-gray-900">
+                    <img src="assets/images/logo-desa.png" alt="Logo Desa Digital" class="w-9 h-9 rounded-full">
+                    <span>Desa Digital</span>
+                    <span class="hidden md:inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">PROFIL</span>
+                </a>
+
+                <!-- Navigasi Aksi -->
+                <nav class="flex space-x-4 items-center">
+                    <a href="layanan_warga.html" class="hidden sm:inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-green-500 rounded-xl hover:bg-green-600 transition duration-150">
+                        <i data-lucide="folder-open" class="w-5 h-5 mr-2"></i> Portal Warga
+                    </a>
+                    <a href="index.html" class="bg-primary text-white px-4 py-2 rounded-xl font-semibold hover:bg-blue-700 transition duration-150 shadow-md inline-flex items-center text-sm">
+                        <i data-lucide="home" class="w-4 h-4 mr-2"></i> Beranda
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="pt-20 pb-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <div class="text-center py-12 bg-white rounded-xl shadow-lg mb-8">
+                <h1 class="text-4xl font-extrabold text-gray-900 mb-2">Informasi Profil Desa [Nama Desa]</h1>
+                <p class="text-xl text-gray-600">Telusuri sejarah, potensi, dan tata kelola pemerintahan desa kami.</p>
+            </div>
+
+            <!-- Bagian 1: Sejarah & Visi Misi -->
+            <section id="profil" class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                
+                <!-- Visi & Misi Card -->
+                <div class="lg:col-span-1 bg-white p-8 rounded-xl shadow-xl h-full">
+                    <h2 class="text-3xl font-extrabold text-primary mb-6 border-b pb-3">Visi dan Misi</h2>
+                    
+                    <div class="mb-6">
+                        <h3 class="text-xl font-bold text-gray-800 flex items-center mb-2">
+                            <i data-lucide="eye" class="w-5 h-5 mr-2 text-primary"></i> Visi Desa
+                        </h3>
+                        <p class="text-gray-600 italic border-l-4 border-primary pl-4 py-1">"Mewujudkan desa yang mandiri, sejahtera, dan berbudaya, berbasis digital dan kearifan lokal."</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 flex items-center mb-2">
+                            <i data-lucide="target" class="w-5 h-5 mr-2 text-primary"></i> Misi Desa
+                        </h3>
+                        <ul class="list-disc list-inside text-gray-600 space-y-2 pl-4">
+                            <li>Peningkatan kualitas pelayanan publik melalui digitalisasi.</li>
+                            <li>Pemberdayaan ekonomi masyarakat berbasis potensi lokal.</li>
+                            <li>Pelestarian nilai budaya dan lingkungan hidup.</li>
+                            <li>Penciptaan tata kelola pemerintahan yang transparan dan akuntabel.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Sejarah Desa Card -->
+                <div class="lg:col-span-2 bg-white p-8 rounded-xl shadow-xl h-full">
+                    <h2 class="text-3xl font-extrabold text-gray-900 mb-6 border-b pb-3 flex items-center">
+                        <i data-lucide="book-open-text" class="w-7 h-7 mr-3 text-red-500"></i> Sejarah Singkat Desa
+                    </h2>
+                    <div class="space-y-4 text-gray-700 leading-relaxed">
+                        <p>Desa [Nama Desa] didirikan pada tahun [Tahun], bermula dari pemukiman kecil yang mayoritas penduduknya berprofesi sebagai [Profesi Utama, misal: petani dan nelayan]. Nama desa ini sendiri diambil dari [Asal Nama, misal: nama tokoh pendiri/fenomena alam].</p>
+                        <p>Sejak saat itu, desa telah melalui [Jumlah] periode kepemimpinan dan berkembang menjadi pusat [Sektor Unggulan, misal: perdagangan kecil] di wilayah ini. Tonggak sejarah penting terjadi pada tahun [Tahun Penting] ketika desa mendapatkan penghargaan [Nama Penghargaan, misal: Desa Percontohan Mandiri Pangan].</p>
+                        <p>Komitmen kami adalah melanjutkan warisan luhur sambil beradaptasi dengan era digital, memastikan setiap warga mendapatkan manfaat dari kemajuan teknologi.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bagian 2: Geografis & Peta (SIG) -->
+            <section id="geografis" class="bg-white p-8 rounded-xl shadow-xl mb-12">
+                <h2 class="text-3xl font-extrabold text-gray-900 mb-6 border-b pb-3 flex items-center">
+                    <i data-lucide="map" class="w-7 h-7 mr-3 text-green-500"></i> Data Geografis & Batas Wilayah (SIG)
+                </h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    
+                    <!-- Peta Placeholder -->
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">Peta Interaktif Desa</h3>
+                        <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500 border border-dashed border-gray-400">
+                            [Placeholder: Peta Web SIG Interaktif Desa]
+                        </div>
+                        <p class="mt-2 text-sm text-gray-500">Peta resmi ini menampilkan batas administrasi, sebaran populasi, dan infrastruktur desa.</p>
+                    </div>
+
+                    <!-- Batas Wilayah -->
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-3">Batas Administrasi</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center py-2 px-4 bg-blue-50 rounded-lg">
+                                <span class="font-medium text-blue-700">Utara:</span>
+                                <span class="text-gray-700">Desa [Nama Desa Utara]</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 px-4 bg-blue-50 rounded-lg">
+                                <span class="font-medium text-blue-700">Selatan:</span>
+                                <span class="text-gray-700">Kecamatan [Nama Kecamatan Selatan]</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 px-4 bg-blue-50 rounded-lg">
+                                <span class="font-medium text-blue-700">Barat:</span>
+                                <span class="text-gray-700">Hutan Lindung [Nama Hutan]</span>
+                            </div>
+                            <div class="flex justify-between items-center py-2 px-4 bg-blue-50 rounded-lg">
+                                <span class="font-medium text-blue-700">Timur:</span>
+                                <span class="text-gray-700">Sungai [Nama Sungai]</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bagian 3: Struktur Pemerintahan -->
+            <section id="struktur" class="bg-white p-8 rounded-xl shadow-xl mb-12">
+                <h2 class="text-3xl font-extrabold text-gray-900 mb-6 border-b pb-3 flex items-center">
+                    <i data-lucide="hard-hat" class="w-7 h-7 mr-3 text-orange-500"></i> Struktur Organisasi Pemerintahan & Lembaga Desa
+                </h2>
+                <p class="text-gray-600 mb-8">Kenali Perangkat Desa, Koordinator Wilayah (RT/RW), dan Organisasi Pendukung.</p>
+
+                <!-- Kategori Navigasi (Tabs/Filter) -->
+                <div class="flex space-x-2 overflow-x-auto pb-4 mb-6 border-b">
+                    <button class="personil-filter py-2 px-4 rounded-lg bg-primary text-white font-semibold whitespace-nowrap" data-category="pemerintahan" onclick="filterPersonil('pemerintahan')">Perangkat Desa</button>
+                    <button class="personil-filter py-2 px-4 rounded-lg bg-gray-200 text-gray-700 font-semibold whitespace-nowrap" data-category="wilayah" onclick="filterPersonil('wilayah')">Ketua RT/RW</button>
+                    <button class="personil-filter py-2 px-4 rounded-lg bg-gray-200 text-gray-700 font-semibold whitespace-nowrap" data-category="organisasi" onclick="filterPersonil('organisasi')">Lembaga & Organisasi</button>
+                </div>
+
+                <!-- Daftar Personil (Grid) -->
+                <div id="personil-list" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                    <!-- Cards Personil akan dimuat di sini oleh JavaScript -->
+                </div>
+            </section>
+
+            <!-- Bagian 4: Potensi Desa -->
+            <section id="potensi" class="bg-white p-8 rounded-xl shadow-xl mb-12">
+                <h2 class="text-3xl font-extrabold text-gray-900 mb-6 border-b pb-3 flex items-center">
+                    <i data-lucide="rocket" class="w-7 h-7 mr-3 text-indigo-500"></i> Potensi & Produk Unggulan Desa
+                </h2>
+                <p class="text-gray-600 mb-8">Sektor-sektor utama yang menjadi penggerak ekonomi dan daya tarik Desa.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Potensi 1: Pertanian/Perkebunan -->
+                    <div class="bg-indigo-50 p-5 rounded-xl border border-indigo-200">
+                        <i data-lucide="leaf" class="w-8 h-8 text-indigo-600 mb-3"></i>
+                        <h4 class="text-xl font-bold text-gray-900 mb-2">Pertanian [Komoditas]</h4>
+                        <p class="text-sm text-gray-700">Mayoritas lahan desa dimanfaatkan untuk [Komoditas Utama]. Desa ini dikenal sebagai pemasok [Komoditas] terbesar di kawasan ini.</p>
+                    </div>
+                    <!-- Potensi 2: Wisata -->
+                    <div class="bg-indigo-50 p-5 rounded-xl border border-indigo-200">
+                        <i data-lucide="camera" class="w-8 h-8 text-indigo-600 mb-3"></i>
+                        <h4 class="text-xl font-bold text-gray-900 mb-2">Pariwisata Alam</h4>
+                        <p class="text-sm text-gray-700">Terdapat destinasi wisata unggulan seperti [Nama Tempat Wisata] yang menawarkan [Deskripsi Singkat Daya Tarik].</p>
+                    </div>
+                    <!-- Potensi 3: Produk Unggulan -->
+                    <div class="bg-indigo-50 p-5 rounded-xl border border-indigo-200">
+                        <i data-lucide="package" class="w-8 h-8 text-indigo-600 mb-3"></i>
+                        <h4 class="text-xl font-bold text-gray-900 mb-2">UMKM & Kerajinan</h4>
+                        <p class="text-sm text-gray-700">Produk unggulan desa adalah [Nama Produk Kerajinan] yang dikelola oleh BUMDes [Nama BUMDes].</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer (Copy dari index.html untuk konsistensi) -->
+    <footer id="kontak" class="bg-gray-800 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Kolom 1: Logo & Deskripsi -->
+                <div>
+                    <a href="#" class="flex items-center space-x-2 text-xl font-extrabold text-white">
+                        <img src="assets/images/logo-desa.png" alt="Logo Desa Digital" class="w-9 h-9 rounded-full">
+                        <span>Desa Digital</span>
+                    </a>
+                    <p class="mt-4 text-sm text-gray-400">Portal resmi Pemerintah Desa untuk melayani dan menginformasikan warga.</p>
+                </div>
+
+                <!-- Kolom 2: Tautan Cepat -->
+                <div>
+                    <h5 class="text-lg font-semibold mb-4 border-b border-gray-700 pb-2">Tautan Cepat</h5>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="layanan_warga.html" class="hover:text-primary transition duration-150">Layanan Warga</a></li>
+                        <li><a href="informasi_desa.html" class="hover:text-primary transition duration-150">Struktur Desa</a></li>
+                        <li><a href="index.html#statistik" class="hover:text-primary transition duration-150">Data Kependudukan</a></li>
+                        <li><a href="dashboard.html" class="hover:text-primary transition duration-150">Admin Login</a></li>
+                    </ul>
+                </div>
+
+                <!-- Kolom 3: Kontak -->
+                <div>
+                    <h5 class="text-lg font-semibold mb-4 border-b border-gray-700 pb-2">Hubungi Kami</h5>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li class="flex items-center"><i data-lucide="map-pin" class="w-4 h-4 mr-2"></i> Kantor Desa [Nama Desa], [Alamat]</li>
+                        <li class="flex items-center"><i data-lucide="mail" class="w-4 h-4 mr-2"></i> email@desadigital.go.id</li>
+                        <li class="flex items-center"><i data-lucide="phone" class="w-4 h-4 mr-2"></i> (021) 1234 567</li>
+                    </ul>
+                </div>
+                
+                <!-- Kolom 4: Peta Lokasi (Placeholder) -->
+                <div>
+                    <h5 class="text-lg font-semibold mb-4 border-b border-gray-700 pb-2">Peta Lokasi</h5>
+                    <div class="bg-gray-700 h-32 rounded-lg flex items-center justify-center text-sm text-gray-400">
+                        [Google Maps Placeholder]
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-10 pt-6 border-t border-gray-700 text-center text-sm text-gray-400">
+                &copy; 2025 Desa Digital. Hak Cipta Dilindungi Undang-Undang.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script for Notifikasi dan Icon -->
+    <!-- Catatan: Memerlukan admin_core.js untuk fungsi showNotification() -->
+    <script src="assets/js/admin_core.js"></script> 
+    <script>
+        // Data Mock untuk Personil
+        const personilData = [
+            // Kategori: Pemerintahan (Perangkat Desa)
+            { id: 1, category: 'pemerintahan', jabatan: 'Kepala Desa', nama: 'Bapak [Nama Kades]', foto: 'Kades', telp: '0812-xxxx-1000', email: 'kades@desa.go.id', rtrw: 'N/A' },
+            { id: 2, category: 'pemerintahan', jabatan: 'Sekretaris Desa', nama: 'Ibu [Nama Sekdes]', foto: 'Sekdes', telp: '0812-xxxx-2000', email: 'sekdes@desa.go.id', rtrw: 'N/A' },
+            { id: 3, category: 'pemerintahan', jabatan: 'Kasi Pemerintahan', nama: 'Bapak [Nama Kasi]', foto: 'Kasi', telp: '0812-xxxx-3000', email: 'kasipem@desa.go.id', rtrw: 'N/A' },
+            { id: 4, category: 'pemerintahan', jabatan: 'Kaur Keuangan', nama: 'Ibu [Nama Kaur Keuangan]', foto: 'Kaur', telp: '0812-xxxx-4000', email: 'keuangan@desa.go.id', rtrw: 'N/A' },
+            { id: 5, category: 'pemerintahan', jabatan: 'Kadus I (Dusun Utara)', nama: 'Bapak [Nama Kadus I]', foto: 'Kadus', telp: '0812-xxxx-5000', email: 'kadus1@desa.go.id', rtrw: 'Dusun I' },
+            
+            // Kategori: Wilayah (RT/RW)
+            { id: 6, category: 'wilayah', jabatan: 'Ketua RW 01', nama: 'Bapak [Nama RW 01]', foto: 'RW01', telp: '0813-xxxx-6001', email: 'rw01@desa.go.id', rtrw: 'RW 01' },
+            { id: 7, category: 'wilayah', jabatan: 'Ketua RT 001/01', nama: 'Ibu [Nama RT 001]', foto: 'RT001', telp: '0813-xxxx-6011', email: 'rt001@desa.go.id', rtrw: 'RT 001' },
+            { id: 8, category: 'wilayah', jabatan: 'Ketua RW 02', nama: 'Bapak [Nama RW 02]', foto: 'RW02', telp: '0813-xxxx-7002', email: 'rw02@desa.go.id', rtrw: 'RW 02' },
+            { id: 9, category: 'wilayah', jabatan: 'Ketua RT 005/02', nama: 'Bapak [Nama RT 005]', foto: 'RT005', telp: '0813-xxxx-7052', email: 'rt005@desa.go.id', rtrw: 'RT 005' },
+            
+            // Kategori: Organisasi
+            { id: 10, category: 'organisasi', jabatan: 'Ketua Karang Taruna', nama: 'Sdr. [Nama Karang Taruna]', foto: 'KT', telp: '0857-xxxx-8000', email: 'karangtaruna@desa.go.id', rtrw: 'N/A' },
+            { id: 11, category: 'organisasi', jabatan: 'Direktur BUMDes', nama: 'Bapak [Nama BUMDes]', foto: 'BUMDes', telp: '0857-xxxx-9000', email: 'bumdes@desa.go.id', rtrw: 'N/A' },
+            { id: 12, category: 'organisasi', jabatan: 'Babinsa', nama: 'Sertu [Nama Babinsa]', foto: 'Babinsa', telp: '0811-xxxx-1000', email: 'babinsa@desa.go.id', rtrw: 'N/A' },
+            { id: 13, category: 'organisasi', jabatan: 'Babinkamtibmas', nama: 'Bripka [Nama Bhabin]', foto: 'Bhabin', telp: '0811-xxxx-2000', email: 'bhabin@desa.go.id', rtrw: 'N/A' }
+        ];
+
+        let activePersonilCategory = 'pemerintahan'; // Default aktif
+
+        // Fungsi untuk menampilkan Pop-up Detail
+        function showDetail(id) {
+            const personil = personilData.find(p => p.id === id);
+            const modal = document.getElementById('personil-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+
+            if (!personil) return showNotification('Data personil tidak ditemukan.', 'error');
+            
+            // Membuat konten modal
+            modalTitle.textContent = personil.jabatan;
+            modalContent.innerHTML = `
+                <div class="md:col-span-1 flex justify-center">
+                    <img src="https://placehold.co/100x100/EFF6FF/3B82F6?text=${personil.foto}" 
+                         alt="Foto ${personil.nama}" class="w-32 h-32 rounded-full object-cover shadow-lg mb-3">
+                </div>
+                <div class="md:col-span-1 space-y-2">
+                    <div>
+                        <p class="text-xs font-medium text-gray-500">NAMA LENGKAP</p>
+                        <p class="text-lg font-bold text-gray-900">${personil.nama}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-gray-500">WILAYAH TUGAS</p>
+                        <p class="text-sm font-semibold text-primary">${personil.rtrw}</p>
+                    </div>
+                </div>
+                <div class="md:col-span-2 space-y-2 pt-4 border-t">
+                    <div>
+                        <p class="text-xs font-medium text-gray-500">KONTAK (Terbatas)</p>
+                        <p class="text-sm text-gray-700 flex items-center"><i data-lucide="phone" class="w-4 h-4 mr-2"></i> ${personil.telp}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs font-medium text-gray-500">EMAIL DINAS</p>
+                        <p class="text-sm text-gray-700 flex items-center"><i data-lucide="mail" class="w-4 h-4 mr-2"></i> ${personil.email}</p>
+                    </div>
+                </div>
+            `;
+            
+            // Tampilkan modal
+            modal.classList.remove('hidden', 'opacity-0');
+            modal.classList.add('opacity-100');
+            
+            // Re-render Lucide icons di modal
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+
+        // Fungsi untuk menutup Pop-up Detail
+        function closeModal() {
+            const modal = document.getElementById('personil-modal');
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300); // Tunggu sampai transisi selesai
+        }
+
+        // Fungsi untuk merender Card Personil
+        function renderPersonilCards(personilArray) {
+            const listContainer = document.getElementById('personil-list');
+            listContainer.innerHTML = ''; // Kosongkan daftar sebelumnya
+
+            personilArray.forEach(personil => {
+                const card = document.createElement('div');
+                card.className = 'p-4 bg-gray-50 rounded-xl shadow-md border border-gray-200 text-center cursor-pointer hover:bg-white hover:shadow-lg transition duration-200';
+                card.setAttribute('onclick', `showDetail(${personil.id})`);
+                
+                // Tentukan warna border berdasarkan kategori
+                let borderColor = 'border-gray-200';
+                if (personil.category === 'pemerintahan') {
+                    borderColor = 'border-blue-500';
+                } else if (personil.category === 'wilayah') {
+                    borderColor = 'border-green-500';
+                } else if (personil.category === 'organisasi') {
+                    borderColor = 'border-purple-500';
+                }
+
+                card.innerHTML = `
+                    <div class="w-full border-t-4 ${borderColor} rounded-t-lg"></div>
+                    <img src="https://placehold.co/100x100/EFF6FF/3B82F6?text=${personil.foto}" 
+                         alt="Foto ${personil.nama}" class="w-16 h-16 mx-auto rounded-full object-cover mb-2 mt-3 shadow-md">
+                    <p class="text-sm font-bold text-gray-900 leading-tight">${personil.nama.split(' ')[1]}</p>
+                    <p class="text-xs text-primary font-semibold mt-1 truncate">${personil.jabatan}</p>
+                    <p class="text-xs text-gray-500 mt-0.5">${personil.rtrw !== 'N/A' ? personil.rtrw : ''}</p>
+                `;
+                listContainer.appendChild(card);
+            });
+        }
+
+        // Fungsi untuk memfilter dan menampilkan personil
+        function filterPersonil(category) {
+            activePersonilCategory = category;
+            
+            // Filter Data
+            const filteredData = personilData.filter(p => p.category === category);
+            renderPersonilCards(filteredData);
+            
+            // Update Tampilan Tombol
+            document.querySelectorAll('.personil-filter').forEach(button => {
+                if (button.getAttribute('data-category') === category) {
+                    button.classList.add('bg-primary', 'text-white');
+                    button.classList.remove('bg-gray-200', 'text-gray-700');
+                } else {
+                    button.classList.remove('bg-primary', 'text-white');
+                    button.classList.add('bg-gray-200', 'text-gray-700');
+                }
+            });
+            
+            // Inisialisasi Lucide Icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Aktifkan filter default saat halaman dimuat
+            filterPersonil(activePersonilCategory);
+
+            // Inisialisasi Lucide Icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

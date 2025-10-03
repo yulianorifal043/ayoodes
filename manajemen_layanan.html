@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Layanan - Admin Desa Digital</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    
+    <!-- Custom Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB', // Biru Resmi
+                        secondary: '#F0F9FF', // Biru Muda untuk background
+                    },
+                },
+            },
+        }
+    </script>
+    
+    <!-- Load Custom Styles (untuk layout sidebar) -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="antialiased bg-gray-100 min-h-screen">
+
+    <!-- Notification Container (Untuk pesan sistem) -->
+    <div id="notification-container" class="fixed right-4 top-4 z-50 space-y-2">
+        <!-- Notifikasi akan muncul di sini -->
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition duration-300 ease-in-out bg-gray-800 w-64 z-50 shadow-2xl">
+        <div class="p-6">
+            <a href="dashboard.html" class="flex items-center space-x-3 text-white">
+                <img src="assets/images/logo-desa.png" alt="Logo Desa" class="w-8 h-8">
+                <span class="text-xl font-extrabold">Admin Desa</span>
+            </a>
+        </div>
+        <nav class="mt-8 space-y-2 px-4">
+            <a href="dashboard.html" class="flex items-center space-x-3 p-3 rounded-xl text-gray-400 hover:bg-gray-700 hover:text-white transition duration-150">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                <span>Dashboard Utama</span>
+            </a>
+            <a href="dashboard_kk_admin.html" class="flex items-center space-x-3 p-3 rounded-xl text-gray-400 hover:bg-gray-700 hover:text-white transition duration-150">
+                <i data-lucide="users-round" class="w-5 h-5"></i>
+                <span>Data Kartu Keluarga</span>
+            </a>
+            <a href="manajemen_layanan.html" class="flex items-center space-x-3 p-3 rounded-xl bg-gray-700 text-white transition duration-150 font-semibold">
+                <i data-lucide="scroll-text" class="w-5 h-5"></i>
+                <span>Manajemen Layanan</span>
+            </a>
+            <a href="informasi_desa.html" class="flex items-center space-x-3 p-3 rounded-xl text-gray-400 hover:bg-gray-700 hover:text-white transition duration-150">
+                <i data-lucide="map" class="w-5 h-5"></i>
+                <span>Informasi Desa</span>
+            </a>
+        </nav>
+        <div class="absolute bottom-0 w-full p-4 border-t border-gray-700">
+            <a href="index.html" class="flex items-center space-x-3 p-3 rounded-xl text-red-400 hover:bg-gray-700 transition duration-150">
+                <i data-lucide="log-out" class="w-5 h-5"></i>
+                <span>Kembali ke Publik</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div id="main-content" class="md:ml-64 transition-all duration-300 min-h-screen">
+        
+        <!-- Top Bar Header -->
+        <header class="bg-white shadow-sm p-4 sticky top-0 z-30">
+            <div class="flex justify-between items-center">
+                <button id="sidebar-toggle" class="md:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+                <h1 class="text-xl sm:text-2xl font-bold text-gray-800">Manajemen Layanan</h1>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-600 hidden sm:block">Admin: [Nama Admin]</span>
+                    <i data-lucide="user-circle" class="w-7 h-7 text-gray-500"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Body -->
+        <main class="p-4 sm:p-6">
+            <div class="bg-white p-4 sm:p-6 rounded-xl shadow-lg">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-3">Daftar Pengajuan Surat Warga</h2>
+                
+                <!-- Filter dan Pencarian -->
+                <div class="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
+                    <div class="w-full md:w-auto flex space-x-3">
+                        <select id="filter-status" onchange="filterLayanan()" class="form-select border-gray-300 rounded-xl shadow-sm text-sm">
+                            <option value="Semua">Semua Status</option>
+                            <option value="Tertunda">Tertunda</option>
+                            <option value="Verifikasi">Verifikasi Dokumen</option>
+                            <option value="Proses">Sedang Diproses</option>
+                            <option value="Selesai">Selesai</option>
+                        </select>
+                        <select id="filter-jenis" onchange="filterLayanan()" class="form-select border-gray-300 rounded-xl shadow-sm text-sm">
+                            <option value="Semua">Semua Jenis Surat</option>
+                            <option value="KTP">KTP Baru</option>
+                            <option value="KK">Pembaruan KK</option>
+                            <option value="Usaha">Surat Izin Usaha</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    <div class="w-full md:w-64">
+                        <input type="text" id="search-input" onkeyup="filterLayanan()" placeholder="Cari berdasarkan Nama atau NIK" class="w-full border-gray-300 rounded-xl shadow-sm text-sm">
+                    </div>
+                </div>
+
+                <!-- Table Layanan -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Pengajuan</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Pemohon</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis Surat</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Masuk</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="layanan-data-table" class="bg-white divide-y divide-gray-200">
+                            <!-- Data Layanan akan dimuat di sini oleh JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination Placeholder -->
+                <div class="mt-4 flex justify-end text-sm text-gray-600">
+                    Menampilkan 1-10 dari 50 Pengajuan
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Detail Layanan (Untuk Verifikasi/Aksi) -->
+    <div id="layanan-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto transform transition-all p-6 relative">
+            <h3 class="text-2xl font-bold border-b pb-3 mb-4 text-gray-800">Detail Pengajuan: <span id="modal-jenis-surat"></span></h3>
+            <button onclick="closeModal('layanan-modal')" class="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100">
+                <i data-lucide="x" class="w-6 h-6 text-gray-600"></i>
+            </button>
+            
+            <div id="modal-content-layanan" class="text-sm space-y-3">
+                <!-- Detail Pengajuan dimuat di sini -->
+                <p class="text-gray-500 font-medium">Nama Pemohon:</p>
+                <p class="text-lg font-semibold text-gray-900" id="detail-nama"></p>
+                
+                <p class="text-gray-500 font-medium">NIK:</p>
+                <p class="text-gray-900 font-semibold" id="detail-nik"></p>
+
+                <p class="text-gray-500 font-medium">Detail Permohonan:</p>
+                <ul class="list-disc list-inside space-y-1 pl-4 text-gray-700" id="detail-syarat">
+                    <!-- Syarat dan data teknis di sini -->
+                </ul>
+                
+                <!-- Tombol Edit Data Dasar (Baru) -->
+                <button onclick="editDataDasar()" class="bg-yellow-500 text-white px-4 py-2 rounded-xl font-semibold hover:bg-yellow-600 transition duration-150 w-full inline-flex items-center justify-center mt-4">
+                    <i data-lucide="pencil" class="w-4 h-4 mr-2"></i> Edit Data Dasar
+                </button>
+
+                <p class="text-gray-500 font-medium pt-3">Status Saat Ini:</p>
+                <div id="detail-status-badge" class="font-bold text-lg mb-4"></div>
+                
+                <!-- Tombol Tinjau Surat -->
+                <div id="surat-actions" class="pt-4 border-t space-y-3">
+                    <!-- Tombol akan muncul di sini jika status = Proses atau Selesai -->
+                </div>
+
+                <div class="pt-4 mt-2 border-t space-y-3">
+                    <h4 class="font-bold text-gray-800">Perubahan Status</h4>
+                    <select id="status-update-select" onchange="toggleCatatanInput(this.value)" class="form-select border-gray-300 rounded-xl shadow-sm text-sm w-full">
+                        <option value="Verifikasi">Verifikasi Dokumen</option>
+                        <option value="Proses">Sedang Diproses</option>
+                        <option value="Selesai">Selesai (Siap Diambil/Cetak)</option>
+                        <option value="Tolak">Tolak (Perlu Revisi)</option>
+                    </select>
+                    
+                    <!-- Input Catatan (Hanya tampil jika status Tolak) -->
+                    <div id="catatan-input-container" class="mt-3 hidden">
+                        <label for="catatan-tolak" class="block text-xs font-medium text-red-600">Catatan Wajib (Alasan Penolakan):</label>
+                        <textarea id="catatan-tolak" rows="3" class="w-full border-red-300 rounded-xl shadow-sm text-sm p-2" placeholder="Contoh: Dokumen KK tidak valid, harap upload ulang."></textarea>
+                    </div>
+
+                    <button onclick="updateStatus()" class="bg-green-600 text-white px-4 py-2 rounded-xl font-semibold hover:bg-green-700 transition duration-150 w-full">
+                        Update Status Layanan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Preview Surat (Baru) -->
+    <div id="preview-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 hidden items-center justify-center z-50">
+        <!-- PERBAIKAN: Mengubah ukuran modal menjadi penuh layar (kecuali padding desktop) -->
+        <div class="bg-white w-full h-full max-w-full max-h-full overflow-hidden transform transition-all relative md:m-8 md:rounded-xl md:shadow-2xl">
+             <h3 class="text-2xl font-bold border-b p-4 text-gray-800">Preview Dokumen Surat <span id="preview-id"></span></h3>
+            <button onclick="closeModal('preview-modal')" class="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100">
+                <i data-lucide="x" class="w-6 h-6 text-gray-600"></i>
+            </button>
+            
+            <!-- Menggunakan flexbox untuk memanfaatkan sisa ruang vertikal -->
+            <div class="flex flex-col h-[calc(100%-110px)]"> 
+                <div class="flex-grow bg-gray-50 p-4">
+                    <iframe id="surat-iframe" src="about:blank" class="w-full h-full border border-gray-300 rounded-lg"></iframe>
+                </div>
+                
+                <div class="p-4 border-t text-right flex-shrink-0">
+                    <button onclick="closeModal('preview-modal')" class="bg-primary text-white px-4 py-2 rounded-xl font-semibold hover:bg-blue-700 transition duration-150">Tutup</button>
+                    <button onclick="showNotification('Simulasi mencetak surat.','success')" class="bg-gray-600 text-white px-4 py-2 rounded-xl font-semibold hover:bg-gray-700 transition duration-150 ml-2">Cetak Surat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Custom Script untuk Halaman Manajemen Layanan -->
+    <script>
+        // --- FUNGSI CORE ADMIN (Diulang untuk menjamin fungsi di Canvas) ---
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            document.getElementById(modalId).classList.remove('flex');
+        }
+        
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlayId = 'sidebar-overlay';
+            let overlay = document.getElementById(overlayId);
+
+            sidebar.classList.toggle('-translate-x-full'); 
+            sidebar.classList.toggle('translate-x-0');   
+            
+            if (sidebar.classList.contains('translate-x-0')) {
+                if (!overlay) {
+                    overlay = document.createElement('div');
+                    overlay.id = overlayId;
+                    overlay.className = 'fixed inset-0 bg-gray-900 bg-opacity-50 z-40 md:hidden'; 
+                    overlay.onclick = toggleSidebar; 
+                    document.body.appendChild(overlay);
+                }
+            } else {
+                if (overlay) {
+                    overlay.remove();
+                }
+            }
+        }
+        window.toggleSidebar = toggleSidebar;
+        // --- AKHIR FUNGSI CORE ADMIN ---
+        
+        // Data Mock Pengajuan Layanan
+        // Menambahkan properti 'surat_dibuat' untuk simulasi otomasi
+        const mockLayananData = [
+            { id: 'L001', nama: "Budi Santoso", nik: "330101XXXXXXXX01", jenis: "KTP", tgl_masuk: "2025-10-01", status: "Tertunda", surat_dibuat: false, catatan_admin: "", detail: { tujuan: "KTP Baru", syarat: ["KK", "Akta Lahir"] } },
+            { id: 'L002', nama: "Dewi Lestari", nik: "330101XXXXXXXX02", jenis: "Usaha", tgl_masuk: "2025-09-28", status: "Verifikasi", surat_dibuat: false, catatan_admin: "", detail: { nama_usaha: "Warung Sembako", alamat: "RT 001/RW 003", syarat: ["Surat Pengantar RT", "Foto Lokasi"] } },
+            { id: 'L003', nama: "Joko Prabowo", nik: "330101XXXXXXXX03", jenis: "KK", tgl_masuk: "2025-09-25", status: "Proses", surat_dibuat: true, catatan_admin: "", detail: { perubahan: "Penambahan Anggota", syarat: ["KK Lama", "Akta Nikah"] } },
+            { id: 'L004', nama: "Rina Amelia", nik: "330101XXXXXXXX04", jenis: "Lainnya", tgl_masuk: "2025-09-20", status: "Selesai", surat_dibuat: true, catatan_admin: "", detail: { permohonan: "Surat Pengantar Nikah", syarat: ["KTP", "KK"] } },
+            { id: 'L005', nama: "Ahmad Yani", nik: "330101XXXXXXXX05", jenis: "KTP", tgl_masuk: "2025-09-15", status: "Tertunda", surat_dibuat: false, catatan_admin: "", detail: { tujuan: "KTP Hilang", syarat: ["Surat Kehilangan Polisi"] } },
+        ];
+        
+        let currentEditingId = null;
+
+        // Helper untuk mendapatkan badge status
+        function getStatusBadge(status) {
+            let color = '';
+            let text = status;
+            switch (status) {
+                case 'Tertunda':
+                    color = 'bg-red-100 text-red-800';
+                    break;
+                case 'Verifikasi':
+                    color = 'bg-yellow-100 text-yellow-800';
+                    break;
+                case 'Proses':
+                    color = 'bg-blue-100 text-blue-800';
+                    break;
+                case 'Selesai':
+                    color = 'bg-green-100 text-green-800';
+                    break;
+                case 'Tolak': 
+                    color = 'bg-gray-500 text-white';
+                    break;
+                default:
+                    color = 'bg-gray-100 text-gray-800';
+            }
+            return `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${color}">${text}</span>`;
+        }
+        
+        // Fungsi utama untuk memuat dan memfilter data
+        function loadLayananData(dataToRender = mockLayananData) {
+            const tableBody = document.getElementById('layanan-data-table');
+            tableBody.innerHTML = '';
+            
+            dataToRender.forEach((data) => {
+                const row = `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${data.id}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${data.nama}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${data.jenis}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${data.tgl_masuk}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">${getStatusBadge(data.status)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                            <button onclick="showLayananDetail('${data.id}')" class="text-primary hover:text-blue-700 p-2 rounded-lg transition duration-150 bg-blue-50 text-xs font-semibold">
+                                <i data-lucide="folder-open" class="w-4 h-4 inline-block mr-1"></i> Detail & Aksi
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+            
+            // Re-inisialisasi Lucide icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+        
+        // Fungsi untuk filtering data
+        function filterLayanan() {
+            const statusFilter = document.getElementById('filter-status').value;
+            const jenisFilter = document.getElementById('filter-jenis').value;
+            const searchInput = document.getElementById('search-input').value.toLowerCase();
+            
+            const filteredData = mockLayananData.filter(data => {
+                const statusMatch = statusFilter === 'Semua' || data.status === statusFilter;
+                const jenisMatch = jenisFilter === 'Semua' || data.jenis === jenisFilter;
+                const searchMatch = data.nama.toLowerCase().includes(searchInput) || data.nik.toLowerCase().includes(searchInput);
+                return statusMatch && jenisMatch && searchMatch;
+            });
+            
+            loadLayananData(filteredData);
+            
+            if (typeof showNotification === 'function') {
+                showNotification(`Filter diterapkan. ${filteredData.length} pengajuan ditemukan.`, 'info');
+            }
+        }
+
+        // FUNGSI BARU: Menampilkan/menyembunyikan input catatan
+        function toggleCatatanInput(status) {
+            const container = document.getElementById('catatan-input-container');
+            if (status === 'Tolak') {
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+                document.getElementById('catatan-tolak').value = ''; // Kosongkan catatan jika status bukan Tolak
+            }
+        }
+        window.toggleCatatanInput = toggleCatatanInput; // Expose to HTML onchange
+
+        // FUNGSI BARU: Simulasi Edit Data Dasar
+        function editDataDasar() {
+            if (typeof showNotification === 'function') {
+                showNotification(`Simulasi: Membuka formulir edit data dasar untuk pengajuan ${currentEditingId}.`, 'warning');
+            }
+        }
+        window.editDataDasar = editDataDasar;
+        
+
+        // Fungsi menampilkan modal detail layanan
+        function showLayananDetail(id) {
+            const data = mockLayananData.find(d => d.id === id);
+            if (!data) return;
+
+            currentEditingId = id; // Simpan ID yang sedang diedit
+            
+            document.getElementById('modal-jenis-surat').textContent = data.jenis;
+            document.getElementById('detail-nama').textContent = data.nama;
+            document.getElementById('detail-nik').textContent = data.nik;
+            
+            // Tampilkan status saat ini
+            document.getElementById('detail-status-badge').innerHTML = getStatusBadge(data.status);
+            
+            // Isi detail permohonan (list persyaratan/data teknis)
+            const syaratList = document.getElementById('detail-syarat');
+            syaratList.innerHTML = '';
+            for (const [key, value] of Object.entries(data.detail)) {
+                // Menampilkan Key dengan format lebih rapi
+                const keyFormatted = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                syaratList.innerHTML += `<li><span class="font-bold">${keyFormatted}:</span> ${value}</li>`;
+            }
+            
+            // --- LOGIKA TINJAU SURAT ---
+            const suratActionsDiv = document.getElementById('surat-actions');
+            suratActionsDiv.innerHTML = '';
+            
+            // Tampilkan tombol Tinjau/Cetak hanya jika surat sudah dibuat (status Proses atau Selesai)
+            if (data.status === 'Proses' || data.status === 'Selesai' || data.surat_dibuat) {
+                 suratActionsDiv.innerHTML = `
+                    <h4 class="font-bold text-gray-800">Dokumen Surat</h4>
+                    <button onclick="previewSurat('${data.id}', '${data.jenis}')" class="bg-primary text-white px-4 py-2 rounded-xl font-semibold hover:bg-blue-700 transition duration-150 w-full inline-flex items-center justify-center">
+                         <i data-lucide="file-text" class="w-4 h-4 mr-2"></i> Tinjau & Cetak Surat
+                    </button>
+                 `;
+            }
+            // --- AKHIR LOGIKA TINJAU SURAT ---
+            
+            // Atur nilai default select status
+            document.getElementById('status-update-select').value = data.status;
+
+            // Atur catatan tolak dan tampilkan input jika statusnya Tolak
+            document.getElementById('catatan-tolak').value = data.catatan_admin || '';
+            toggleCatatanInput(data.status);
+            
+            document.getElementById('layanan-modal').classList.remove('hidden');
+            document.getElementById('layanan-modal').classList.add('flex');
+            
+            if (typeof showNotification === 'function') {
+                lucide.createIcons(); // Agar icon di modal muncul
+                showNotification(`Membuka detail pengajuan ${id}.`, 'info');
+            }
+        }
+        
+        // FUNGSI BARU: Menampilkan modal preview surat
+        function previewSurat(id, jenis) {
+            const suratIframe = document.getElementById('surat-iframe');
+            
+            // Simulasi konten surat PDF/Dokumen di iframe
+            // Di implementasi nyata, ini akan me-load URL ke dokumen yang telah dibuat server
+            const mockContent = `
+                <style>body{font-family: Arial, sans-serif; padding: 30px; line-height: 1.6;} h1{color: #2563EB;} .stamp{border: 2px dashed #000; padding: 10px; display: inline-block; margin-top: 20px;}</style>
+                <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px;">
+                    <h2 style="margin: 0;">PEMERINTAH DESA [NAMA DESA]</h2>
+                    <p style="margin: 0; font-size: 14px;">Sekretariat: [Alamat Desa]</p>
+                </div>
+                <h1>SURAT KETERANGAN ${jenis.toUpperCase()}</h1>
+                <p>Nomor: 470/${id}/X/2025</p>
+                <p>Yang bertanda tangan di bawah ini:</p>
+                <p style="margin-left: 20px;">Nama: [Nama Kepala Desa]</p>
+                <p style="margin-left: 20px;">Jabatan: Kepala Desa [Nama Desa]</p>
+                <p>Dengan ini menerangkan bahwa:</p>
+                <p style="margin-left: 20px;">Nama: ${mockLayananData.find(d => d.id === id).nama}</p>
+                <p style="margin-left: 20px;">NIK: ${mockLayananData.find(d => d.id === id).nik}</p>
+                <p style="margin-left: 20px;">Keperluan: Pengajuan ${jenis}</p>
+                <p>Surat ini dikeluarkan untuk digunakan sebagaimana mestinya. Data diambil dari sistem Desa Digital.</p>
+                <p style="text-align: right; margin-top: 50px;">[Nama Desa], ${new Date().toLocaleDateString('id-ID')}</p>
+                <p style="text-align: right;">Kepala Desa,</p>
+                <div class="stamp" style="float: right;">Tanda Tangan & Cap Resmi</div>
+            `;
+            
+            // Masukkan konten ke iframe
+            suratIframe.contentWindow.document.open();
+            suratIframe.contentWindow.document.write(mockContent);
+            suratIframe.contentWindow.document.close();
+            
+            document.getElementById('preview-id').textContent = id;
+            document.getElementById('preview-modal').classList.remove('hidden');
+            document.getElementById('preview-modal').classList.add('flex');
+            closeModal('layanan-modal'); // Tutup modal detail saat modal preview dibuka
+            
+            if (typeof showNotification === 'function') {
+                showNotification(`Preview surat ${id} berhasil dimuat.`, 'info');
+            }
+        }
+        
+        // Fungsi untuk update status
+        function updateStatus() {
+            const newStatus = document.getElementById('status-update-select').value;
+            const catatan = document.getElementById('catatan-tolak').value.trim();
+            if (!currentEditingId || !newStatus) return;
+
+            // VALIDASI KHUSUS JIKA STATUS = TOLAK
+            if (newStatus === 'Tolak' && catatan === '') {
+                if (typeof showNotification === 'function') {
+                    showNotification('Catatan (Alasan Penolakan) wajib diisi!', 'error');
+                }
+                document.getElementById('catatan-tolak').focus();
+                return; 
+            }
+
+            const index = mockLayananData.findIndex(d => d.id === currentEditingId);
+            if (index !== -1) {
+                const oldStatus = mockLayananData[index].status;
+                mockLayananData[index].status = newStatus;
+                
+                // Simpan Catatan Admin
+                mockLayananData[index].catatan_admin = newStatus === 'Tolak' ? catatan : '';
+                
+                // Reset flag surat_dibuat jika kembali ke tahap awal
+                if (newStatus === 'Tertunda' || newStatus === 'Verifikasi' || newStatus === 'Tolak') {
+                    mockLayananData[index].surat_dibuat = false;
+                }
+
+                let successMessage = `Status pengajuan ${currentEditingId} berhasil diupdate menjadi ${newStatus}.`;
+
+                // LOGIKA OTOMASI SURAT
+                if (newStatus === 'Proses' && !mockLayananData[index].surat_dibuat) {
+                    mockLayananData[index].surat_dibuat = true; // Tandai surat sudah dibuat
+                    successMessage += ' Surat berhasil dibuat secara otomatis.';
+                    if (typeof showNotification === 'function') {
+                         showNotification('SURAT OTOMATIS DIBUAT! Harap tinjau dokumen sekarang.', 'success');
+                    }
+                }
+                
+                // Tambahkan notifikasi khusus jika DITOLAK
+                if (newStatus === 'Tolak') {
+                    successMessage = `Pengajuan ${currentEditingId} DITOLAK. Catatan untuk user: "${catatan}"`;
+                    if (typeof showNotification === 'function') {
+                        showNotification('PENOLAKAN berhasil dicatat dan notifikasi dikirim ke user.', 'error');
+                    }
+                }
+                
+                // Tutup modal dan muat ulang data
+                closeModal('layanan-modal');
+                loadLayananData(); 
+
+                if (typeof showNotification === 'function') {
+                    showNotification(successMessage, 'success');
+                }
+            }
+        }
+
+        // Inisialisasi pada saat dokumen dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            loadLayananData();
+            
+            // Mengaktifkan toggle sidebar
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', toggleSidebar);
+            }
+            
+            // Menutup sidebar saat link diklik (UX mobile)
+            const sidebarLinks = document.querySelectorAll('#sidebar a');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 768) { 
+                        toggleSidebar();
+                    }
+                });
+            });
+
+            // Re-inisialisasi Lucide icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+            
+            if (typeof showNotification === 'function') {
+                showNotification('Manajemen Layanan siap untuk bekerja.', 'success');
+            }
+        });
+
+        // Event listener untuk menutup modal ketika mengklik di luar area modal
+        document.getElementById('layanan-modal')?.addEventListener('click', function(e) {
+            if (e.target.id === 'layanan-modal') {
+                closeModal('layanan-modal');
+            }
+        });
+        
+        document.getElementById('preview-modal')?.addEventListener('click', function(e) {
+            if (e.target.id === 'preview-modal') {
+                closeModal('preview-modal');
+            }
+        });
+
+    </script>
+
+    <!-- Load Admin Core Script (untuk showNotification) -->
+    <script src="assets/js/admin_core.js"></script>
+</body>
+</html>

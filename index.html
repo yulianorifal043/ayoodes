@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desa Digital - Layanan dan Informasi Resmi [Nama Desa]</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Portal resmi Desa [Nama Desa] untuk layanan administrasi, informasi kependudukan, dan profil desa secara transparan.">
+    <meta name="keywords" content="desa digital, layanan online, surat desa, administrasi, kependudukan, [Nama Desa]">
+
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    
+    <!-- Custom Tailwind Configuration untuk Warna Primer (Dibiarkan di sini untuk kemudahan konfigurasi) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB', // Biru Resmi
+                        secondary: '#F0F9FF', // Biru Muda untuk background
+                        'primary-100': '#DBEAFE',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: 0, transform: 'translateY(20px)' },
+                            '100%': { opacity: 1, transform: 'translateY(0)' },
+                        },
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.7s ease-out forwards',
+                    },
+                },
+            },
+        }
+    </script>
+    
+    <!-- Load Custom Styles -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="antialiased bg-gray-50 min-h-screen">
+
+    <!-- Notification Container (Digunakan untuk pesan sistem) -->
+    <div id="notification-container" class="fixed right-4 top-4 z-50 space-y-2">
+        <!-- Notifikasi akan muncul di sini -->
+    </div>
+
+    <!-- Mobile Menu Overlay (Backdrop) -->
+    <div id="mobile-menu-overlay" class="fixed inset-0 bg-gray-900 bg-opacity-70 z-40 hidden transition-opacity duration-300 opacity-0" onclick="toggleMobileMenu()"></div>
+
+    <!-- Mobile Menu (Pop-up from right) -->
+    <div id="mobile-menu" class="fixed top-0 right-0 bottom-0 w-64 bg-white shadow-xl z-50 transform translate-x-full transition-transform duration-300">
+        <div class="p-6 border-b flex justify-between items-center">
+            <h3 class="text-lg font-bold">Menu Navigasi</h3>
+            <button id="menu-close" class="p-1 rounded-full text-gray-600 hover:bg-gray-100">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+        <nav class="p-4 space-y-2 flex flex-col">
+            <a href="#hero" class="py-2 px-3 rounded-lg hover:bg-gray-100 text-gray-700 font-medium">Beranda</a>
+            <a href="layanan_warga.html" class="py-2 px-3 rounded-lg hover:bg-gray-100 text-gray-700 font-medium">Layanan Warga</a>
+            <a href="informasi_desa.html" class="py-2 px-3 rounded-lg hover:bg-gray-100 text-gray-700 font-medium">Informasi Desa</a>
+            <a href="#berita" class="py-2 px-3 rounded-lg hover:bg-gray-100 text-gray-700 font-medium">Berita</a>
+            <a href="#kontak" class="py-2 px-3 rounded-lg hover:bg-gray-100 text-gray-700 font-medium">Kontak</a>
+            <div class="pt-4">
+                <a href="dashboard.html" class="block text-center bg-primary text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-blue-700 transition duration-150 shadow-lg">
+                    Admin Login
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Navbar Header (Fixed) -->
+    <header class="bg-white fixed top-0 w-full z-40 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                
+                <!-- Logo (Menggunakan w-9 h-9 tanpa rounded-full atau shadow) -->
+                <a href="index.html" class="flex items-center space-x-2 text-xl font-extrabold text-gray-900">
+                    <img src="assets/images/logo-desa.png" alt="Logo Desa Digital" class="w-9 h-9">
+                    <span>AyoDes</span>
+                </a>
+
+                <!-- Navigasi Desktop -->
+                <nav class="hidden md:flex space-x-8 items-center">
+                    <a href="#hero" class="text-gray-600 font-semibold hover:text-primary transition duration-150">Beranda</a>
+                    <a href="layanan_warga.html" class="text-gray-600 font-semibold hover:text-primary transition duration-150">Layanan Warga</a>
+                    <a href="informasi_desa.html" class="text-gray-600 font-semibold hover:text-primary transition duration-150">Informasi Desa</a>
+                    <a href="#berita" class="text-gray-600 font-semibold hover:text-primary transition duration-150">Berita</a>
+                    <a href="#kontak" class="text-gray-600 font-semibold hover:text-primary transition duration-150">Kontak</a>
+                    
+                    <!-- Tombol Portal Warga -->
+                    <a href="layanan_warga.html" class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-green-500 rounded-xl hover:bg-green-600 transition duration-150 shadow-md">
+                        <i data-lucide="folder-open" class="w-5 h-5 mr-2"></i> Portal Warga
+                    </a>
+                </nav>
+
+                <!-- Tombol Mobile Menu -->
+                <button id="menu-toggle" class="md:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition duration-150">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="pb-12">
+        
+        <!-- Hero Section (Dua Kolom, Full Width Background) -->
+        <section id="hero" class="pt-30 pb-16 lg:pt-40 lg:pb-28 bg-secondary mt-0 mb-12 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                    
+                    <!-- Kolom Kiri: Teks & CTA (Animasi #1) -->
+                    <div class="lg:pr-12" style="opacity: 0;" id="hero-left">
+                        <span class="inline-block text-sm font-semibold text-primary mb-2 animate-fade-in-up" style="animation-delay: 0.1s;">PILIH LAYANAN DESA TERBAIK!</span>
+                        
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 leading-tight mb-4 animate-fade-in-up" style="animation-delay: 0.2s;">
+                            Layanan Publik
+                            <span class="text-primary block">Lebih Cepat & Transparan</span>
+                        </h1>
+                        <p class="mt-4 text-xl text-gray-600 max-w-xl animate-fade-in-up" style="animation-delay: 0.3s;">
+                            Ajukan surat dan kelola data administrasi kependudukan tanpa perlu ke Kantor Desa.
+                        </p>
+                        
+                        <!-- Poin Utama (seperti Referensi) -->
+                        <div class="mt-6 grid grid-cols-2 gap-4 text-gray-700 animate-fade-in-up" style="animation-delay: 0.4s;">
+                            <p class="flex items-center font-medium"><i data-lucide="check-circle" class="w-5 h-5 mr-2 text-green-500"></i> Integrasi Data KK</p>
+                            <p class="flex items-center font-medium"><i data-lucide="check-circle" class="w-5 h-5 mr-2 text-green-500"></i> Layanan 24/7</p>
+                            <p class="flex items-center font-medium"><i data-lucide="check-circle" class="w-5 h-5 mr-2 text-green-500"></i> Aman & Terpercaya</p>
+                            <p class="flex items-center font-medium"><i data-lucide="check-circle" class="w-5 h-5 mr-2 text-green-500"></i> Pengajuan Surat Otomatis</p>
+                        </div>
+
+                        <!-- CTA Buttons -->
+                        <div class="mt-8 space-y-4 sm:space-y-0 sm:space-x-4 animate-fade-in-up" style="animation-delay: 0.5s;">
+                            <a href="layanan_warga.html" class="w-full sm:w-auto bg-green-500 text-white text-lg px-8 py-3 rounded-xl font-bold hover:bg-green-600 transition duration-300 shadow-xl inline-flex items-center justify-center">
+                                Mulai Layanan Online 
+                                <i data-lucide="arrow-right" class="w-5 h-5 ml-2"></i>
+                            </a>
+                            <a href="dashboard.html" class="w-full sm:w-auto text-primary text-lg px-8 py-3 rounded-xl font-bold hover:bg-blue-50 transition duration-300 inline-flex items-center justify-center border border-transparent hover:border-blue-200">
+                                Admin Login
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Kolom Kanan: Visual/Illustrasi (Animasi #2) -->
+                    <div class="flex justify-center lg:justify-end" style="opacity: 0;" id="hero-right">
+                        <!-- Placeholder PNG untuk Ilustrasi Layanan Digital -->
+                        <img src="assets/images/hero2.png" onerror="this.onerror=null; this.src='https://placehold.co/400x350/F0F9FF/2563EB?text=Ilustrasi+Layanan+Digital';" alt="Ilustrasi Layanan Desa Digital" class="w-full max-w-lg object-cover h-auto animate-fade-in-up" style="animation-delay: 0.6s;">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Bagian 1: Statistik Cepat (Revisi dari Dashboard) -->
+        <section id="statistik" class="py-12">
+            <h2 class="text-3xl font-extrabold text-center text-gray-900 mb-8">Data Kependudukan & Potensi Desa</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-primary text-center animate-fade-in-up" style="animation-delay: 0.7s;">
+                    <i data-lucide="users" class="w-8 h-8 text-primary mx-auto mb-3"></i>
+                    <p class="text-4xl font-extrabold text-gray-900">4,500</p>
+                    <p class="text-sm text-gray-500 mt-1">Total Penduduk</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-green-500 text-center animate-fade-in-up" style="animation-delay: 0.8s;">
+                    <i data-lucide="building-2" class="w-8 h-8 text-green-500 mx-auto mb-3"></i>
+                    <p class="text-4xl font-extrabold text-gray-900">1,200</p>
+                    <p class="text-sm text-gray-500 mt-1">Jumlah Kartu Keluarga</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-yellow-500 text-center animate-fade-in-up" style="animation-delay: 0.9s;">
+                    <i data-lucide="briefcase" class="w-8 h-8 text-yellow-500 mx-auto mb-3"></i>
+                    <p class="text-4xl font-extrabold text-gray-900">150+</p>
+                    <p class="text-sm text-gray-500 mt-1">Unit UMKM Aktif</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-red-500 text-center animate-fade-in-up" style="animation-delay: 1.0s;">
+                    <i data-lucide="calendar-check" class="w-8 h-8 text-red-500 mx-auto mb-3"></i>
+                    <p class="text-4xl font-extrabold text-gray-900">98%</p>
+                    <p class="text-sm text-gray-500 mt-1">Layanan Tepat Waktu</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Bagian 2: Berita Terbaru -->
+        <section id="berita" class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-extrabold text-gray-900">Berita & Pengumuman Terbaru</h2>
+                <a href="#" class="text-primary font-semibold hover:underline flex items-center">Lihat Semua <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i></a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Berita Card 1 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transition duration-300 hover:shadow-xl">
+                    <img src="https://placehold.co/600x400/3B82F6/ffffff?text=Bantuan+Sosial" alt="Gambar Berita" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <span class="text-xs font-semibold text-red-500 uppercase tracking-wider">Pengumuman</span>
+                        <h3 class="mt-2 text-xl font-bold text-gray-900 line-clamp-2">Penyaluran Bantuan Pangan Tahap III Bulan [Bulan]</h3>
+                        <p class="mt-3 text-gray-600 text-sm line-clamp-3">Warga dihimbau untuk datang ke balai desa sesuai jadwal yang telah ditentukan untuk mengambil bantuan pangan...</p>
+                        <a href="#" class="mt-4 text-sm font-semibold text-primary hover:underline inline-flex items-center">Baca Selengkapnya <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i></a>
+                    </div>
+                </div>
+                <!-- Berita Card 2 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transition duration-300 hover:shadow-xl">
+                    <img src="https://placehold.co/600x400/10B981/ffffff?text=UMKM+Desa" alt="Gambar Berita" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <span class="text-xs font-semibold text-green-500 uppercase tracking-wider">Ekonomi</span>
+                        <h3 class="mt-2 text-xl font-bold text-gray-900 line-clamp-2">Pelatihan Digital Marketing untuk UMKM Desa</h3>
+                        <p class="mt-3 text-gray-600 text-sm line-clamp-3">BUMDes menyelenggarakan pelatihan intensif untuk meningkatkan penjualan produk lokal melalui platform digital...</p>
+                        <a href="#" class="mt-4 text-sm font-semibold text-primary hover:underline inline-flex items-center">Baca Selengkapnya <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i></a>
+                    </div>
+                </div>
+                <!-- Berita Card 3 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transition duration-300 hover:shadow-xl">
+                    <img src="https://placehold.co/600x400/F59E0B/ffffff?text=Kerja+Bakti" alt="Gambar Berita" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <span class="text-xs font-semibold text-yellow-500 uppercase tracking-wider">Kegiatan</span>
+                        <h3 class="mt-2 text-xl font-bold text-gray-900 line-clamp-2">Jadwal Kerja Bakti Bersama Bersihkan Lingkungan RW 02</h3>
+                        <p class="mt-3 text-gray-600 text-sm line-clamp-3">Diimbau kepada seluruh warga RW 02 untuk berpartisipasi dalam kegiatan kerja bakti rutin bulan ini...</p>
+                        <a href="#" class="mt-4 text-sm font-semibold text-primary hover:underline inline-flex items-center">Baca Selengkapnya <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer id="kontak" class="bg-gray-800 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Kolom 1: Logo & Deskripsi -->
+                <div>
+                    <a href="#" class="flex items-center space-x-2 text-xl font-extrabold text-white">
+                        <img src="assets/images/logo-desa.png" alt="Logo Desa Digital" class="w-9 h-9">
+                        <span>Desa Digital</span>
+                    </a>
+                    <p class="mt-4 text-sm text-gray-400">Portal resmi Pemerintah Desa untuk melayani dan menginformasikan warga.</p>
+                </div>
+
+                <!-- Kolom 2: Tautan Cepat -->
+                <div>
+                    <h5 class="text-lg font-semibold mb-4 border-b border-gray-700 pb-2">Tautan Cepat</h5>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="layanan_warga.html" class="hover:text-primary transition duration-150">Layanan Warga</a></li>
+                        <li><a href="informasi_desa.html" class="hover:text-primary transition duration-150">Informasi Desa</a></li>
+                        <li><a href="#statistik" class="hover:text-primary transition duration-150">Data Kependudukan</a></li>
+                        <li><a href="dashboard.html" class="hover:text-primary transition duration-150">Admin Login</a></li>
+                    </ul>
+                </div>
+
+                <!-- Kolom 3: Kontak -->
+                <div>
+                    <h5 class="text-lg font-semibold mb-4 border-b border-gray-700 pb-2">Hubungi Kami</h5>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li class="flex items-center"><i data-lucide="map-pin" class="w-4 h-4 mr-2"></i> Kantor Desa [Nama Desa], [Alamat]</li>
+                        <li class="flex items-center"><i data-lucide="mail" class="w-4 h-4 mr-2"></i> email@desadigital.go.id</li>
+                        <li class="flex items-center"><i data-lucide="phone" class="w-4 h-4 mr-2"></i> (021) 1234 567</li>
+                    </ul>
+                </div>
+                
+                <!-- Kolom 4: Peta Lokasi (Placeholder) -->
+                <div>
+                    <h5 class="text-lg font-semibold mb-4 border-b border-gray-700 pb-2">Peta Lokasi</h5>
+                    <div class="bg-gray-700 h-32 rounded-lg flex items-center justify-center text-sm text-gray-400">
+                        [Google Maps Placeholder]
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-10 pt-6 border-t border-gray-700 text-center text-sm text-gray-400">
+                &copy; 2025 Desa Digital. Hak Cipta Dilindungi Undang-Undang.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script Publik (untuk mobile menu dan animasi) -->
+    <script src="assets/js/pub_script.js"></script>
+    <!-- Script Admin Core (untuk notifikasi) -->
+    <script src="assets/js/admin_core.js"></script> 
+</body>
+</html>
